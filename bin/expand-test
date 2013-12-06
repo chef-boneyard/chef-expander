@@ -46,7 +46,8 @@ end
 
 NAMER = Namer.new
 
-ARGV.each do |input_json_file|
+ARGV.each do |input_json_dir|
+  Dir["#{input_json_dir}/**.merged", "#{input_json_dir}/**/**.merged"].uniq.each do |input_json_file|
   NAMER.current = input_json_file + ".xml.ruby"
   payload = Yajl::Parser.parse(IO.read(input_json_file))
   object_cmd = {
@@ -61,6 +62,7 @@ ARGV.each do |input_json_file|
   }
   e = Chef::Expander::Solrizer.new(Yajl::Encoder.encode(object_cmd))
   e.run
+  end
 end
 puts "ok"
 
